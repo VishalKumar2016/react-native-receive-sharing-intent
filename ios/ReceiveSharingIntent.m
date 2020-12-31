@@ -58,7 +58,7 @@
         reject(@"message", @"file type is Invalid", error);
     } else if([json isEqualToString:@"invalid group name"]) {
         NSError *error = [[NSError alloc] initWithDomain:@"" code:400 userInfo:nil];
-        reject(@"message", "invalid group name. Please check your share extention bundle name is same as `group.mainbundle name`  ", error);
+        reject(@"message", @"invalid group name. Please check your share extention bundle name is same as `group.mainbundle name`  ", error);
     } else {
         resolve(json);
     }
@@ -141,7 +141,7 @@
 -(NSArray<SharedMediaFile *> *)_decode:(NSData *)data {
     NSMutableArray <SharedMediaFile *> *mediaFileArray = [[NSMutableArray alloc] init];
     
-    NSArray <NSDictionary<NSString *, id>>*arrayOfDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+    NSArray <NSDictionary<NSString *, id>*>*arrayOfDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
     for (NSDictionary<NSString *, id> *dict in arrayOfDict) {
         SharedMediaFile *tmpObj = [[SharedMediaFile alloc] initPath:dict[@"path"] thumbnail:dict[@"thumbnail"] duration:[dict[@"duration"] doubleValue] type: (SharedMediaType)[dict[@"type"] integerValue]];
         [mediaFileArray addObject: tmpObj];
@@ -151,11 +151,11 @@
 }
 
 -(NSString * _Nullable)_toJson:(NSArray<SharedMediaFile*> *)mediaFiles {
-    if (data == nil) {
+    if (mediaFiles == nil) {
         return nil;
     }
     
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:mediaFiles options:NSJSONWritingWithoutEscapingSlashes error:nil];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:mediaFiles options:NSJSONWritingPrettyPrinted error:nil];
     return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 }
 
